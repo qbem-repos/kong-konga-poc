@@ -1,0 +1,46 @@
+version: "3.7"
+
+networks:
+  kong-net:
+    name: kong-net
+    driver: bridge
+
+services:
+  service-a:
+    build: 
+      context: .
+      args:
+        buildno: 1
+    environment:
+      - SERVICE_PORT=8881
+      - CONTENT=<h1>Service A</h1>
+    ports:
+      - "8881:8881"
+    networks:
+      - kong-net
+  
+  service-b:
+    build: 
+      context: .
+      args:
+        buildno: 1
+    environment:
+      - SERVICE_PORT=8882
+      - CONTENT=<h1>Service B</h1>
+    ports:
+      - "8882:8882"
+    networks:
+      - kong-net
+  
+  service-c:
+    build: 
+      context: .
+      args:
+        buildno: 1
+    environment:
+      - SERVICE_PORT=8883
+      - CONTENT=<h1>Service C</h1>
+    ports:
+      - "8883:8883"
+    networks:
+      - kong-net
