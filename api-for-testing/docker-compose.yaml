@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  service-a:
+    container_name: service-a
+    image: service:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - PORT=:8880
+      - NAME=service-a
+    ports:
+      - 8880:8880
+    networks:
+      - kong-net
+
+  service-b:
+    container_name: service-b
+    image: service:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - PORT=:8881
+      - NAME=service-b
+    ports:
+      - 8881:8881
+    networks:
+      - kong-net
+
+networks:
+  kong-net:
+    external: true
+    driver: bridge

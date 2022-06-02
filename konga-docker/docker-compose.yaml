@@ -1,0 +1,41 @@
+version: '3.7'
+
+networks:
+  kong-net:
+    external: true
+    driver: bridge
+
+services:
+  
+  # KONGA
+  ## banco de dados usado pelo konga & kong
+  konga-db:
+    image: mongo:latest
+    container_name: konga-db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: konga
+      MONGO_INITDB_ROOT_PASSWORD: konga
+    ports:
+      - "27017:27017"
+    networks:
+      - kong-net
+
+  konga:
+    image: pantsel/konga:latest
+    container_name: konga
+    restart: always
+    environment:
+      - TOKEN_SECRET=konga # token secret para autenticacao
+      - DB_ADAPTER=mongo # adapter do banco de dados
+      - DB_URI=mongodb://konga:konga@konga-db:27017/ # uri do banco de dados
+      - NODE_ENV=production # ambiente de desenvolvimento
+      - PORT=1337 # porta do konga  
+      - NO_AUTH=true # nao autenticar
+    ports:
+      - "1337:1337" # porta do konga
+    networks:
+      - kong-net
+    depends_on:
+      - konga-db
+
